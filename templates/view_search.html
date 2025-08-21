@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate of Appreciation</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/view_search.css') }}">
+</head>
+<body>
+    <div class="header" id="myHeader">
+      <h2>My Header</h2>
+    </div>
+    <div class="certificate">
+        <div class="coa-background">
+            <div class="splatters splatter-top-left"></div>
+            <div class="splatters splatter-top-right"></div>
+            <div class="splatters splatter-bottom-left"></div>
+            <div class="splatters splatter-bottom-right"></div>
+        </div>
+        <div class="coa-content">
+            <h1 class="coa-title">CERTIFICATE</h1>
+            <h2 class="coa-subtitle">OF AUTHENTICITY</h2>
+            <p class="present-to">Granted to {{ search_data[0].username }} by ArtCertique™</p>
+            <!-- Use the correct keys from your search_data structure -->
+            <h3 class="coa-name">{{ search_data[0].artwork_title }}</h3>
+            <p class="coa-description">
+              This certificate verifies that this artwork is an original work by <strong>{{ search_data[0].username }}</strong>. The piece demonstrates the artist's mastery in 
+                {% if search_data[0].categories %}
+                    {{ search_data[0].categories[:-1] | join(', ') }}{% if search_data[0].categories | length > 1 %} and {{ search_data[0].categories[-1] }}.{% else %}{{ search_data[0].categories[-1] }}{% endif %}
+                {% endif %} Each aspect of this artwork, meticulously crafted, confirms its authenticity as a one-of-a-kind creation, distinguishing it as a true original in the world of custom art.
+            </p>
+            <div class="coa-footer">
+                <div class="date">
+                    <p>Completed: {{ search_data[0].date_completed }}</p>
+                </div>
+                <div class="signature">
+                  <img src="{{ search_data[0].artist_signature_secure_url }}" class="d-block w-100 sig-image" alt="{{ search_data[0].filename }}">
+                </div>
+            </div>
+            <div>
+              <div id="slideshow">
+                {% for data in search_data %}
+                  <div>
+                    <img src="{{ data.secure_url }}" class="d-block w-100" alt="{{ data.filename }}">
+                  </div>
+                {% endfor %}
+             </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tm-footer">
+      <h6>ArtCertique™</h6>
+    </div>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/view-search.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>art certique</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-icons.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  
+</head>
+<body class="">
+
+  {% include 'navbar.html' %}
+
+  <div class="container-fluid pt-3">
+    <div class="row m-5">
+      <div class="col-sm-9 col-md-9 col-lg-9">
+        <h3>My Art</h3>
+      </div>
+      <!-- <div class="col-sm-3 col-md-3 col-lg-2">
+        <button type="button" class="btn btn-outline-secondary w-100 fw-bold"><i class="bi bi-sliders mx-1"></i> status</button>
+      </div> -->
+      <div class="col-sm-3 col-md-3 col-lg-3">
+        <button type="button" class="btn btn-success fw-bold" data-bs-toggle="modal" data-bs-target="#new-search"><i class="bi bi-plus-circle-dotted mx-2"></i>Authenticate New Art</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row mx-5">
+      <div class="col-12">
+        
+        <table class="table table-hover" id="saved-searches">
+
+          <thead>
+            <tr>
+              <th scope="col">Upload Name</th>
+              <th scope="col">Created</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            
+            <input type="hidden" name="next" value="{{request.args.get('next','')}}"/>
+            <!-- LOOP ROWS -->
+
+          </tbody>
+
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- New Search Modal -->
+  <!-- <div class="modal fade" id="new-search" tabindex="-1" aria-labelledby="new-searchLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="new-searchLabel">Start New Authentication</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="new-search">
+            <div class="mb-3">
+              <label for="search-name" class="form-label">Artwork Title</label>
+              <input type="text" class="form-control" id="search-name" placeholder="cas entry 01/02/23" required>
+            </div>
+            <div class="mb-3">
+              <label for="search-name" class="form-label">Date Completed</label>
+              <div class="input-group date" id="datepicker">
+                <input type="text" class="form-control" id="date"/>
+                <span class="input-group-append">
+                  <span class="input-group-text bg-light d-block">
+                    <i class="fa fa-calendar"></i>
+                  </span>
+                </span>
+              </div>
+            </div>
+            
+            <input type="hidden" name="next" value="{{request.args.get('next','')}}"/>
+
+            <div class="text-center align-middle text-success m-1 p-1" id="success-alert"></div>
+            
+            <button type="submit" id="process-file-btn" class="btn btn-success float-end w-100">save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- New Search Modal -->
+<div class="modal fade" id="new-search" tabindex="-1" aria-labelledby="new-searchLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="new-searchLabel">Start New Authentication</h1>
+        <button type="button" class="btn-close bg-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="new-search-form">
+          <!-- Artwork Title -->
+          <div class="mb-3">
+            <label for="artwork-title" class="form-label">Artwork Title</label>
+            <input type="text" class="form-control" id="artwork-title" name="artwork-title" placeholder="Ex: Custom Art Funko Pop! Future Trunks #313" required>
+            <div class="counter" id="charCount">Characters: 0</div>
+          </div>
+          <!-- Artist Name (NEEDS TO BE AUTOFILLED) --> 
+          <!-- <div class="mb-3">
+            <label for="artist-name" class="form-label">Artist Name</label>
+            <input type="text" class="form-control" id="artist-name" required>
+          </div> -->
+          <!-- Description of the Artwork -->
+          <div class="mb-3">
+            <label for="art-description" class="form-label">Description</label>
+            <textarea class="form-control" id="art-description" name="art-description" rows="4" placeholder="Write a short description about your artwork" required></textarea>
+          </div>
+          <!-- Date Completed -->
+          <div class="mb-3">
+            <label for="date-completed" class="form-label">Date Completed</label>
+            <input type="date" class="form-control" id="date-completed" name="date-completed" required>
+          </div>
+          <!-- Upload Images of Artwork -->
+          <div class="mb-3">
+            <label for="artwork-images" class="form-label">Add Timeline or Final Photos</label>
+            <input type="file" class="form-control" id="artwork-images" name="artwork-images" multiple required>
+          </div>
+          <div class="mb-3">
+            <label for="artwork-categories" class="form-label">Skills Used in This Artwork</label>
+            <div class="form-check">
+              <input type="checkbox" class="btn-check" value="Character Design" id="character-design" name="categories" autocomplete="off">
+              <label class="btn" for="character-design">Character Design</label>
+              <input type="checkbox" class="btn-check" value="Coloring" id="coloring" name="categories" autocomplete="off">
+              <label class="btn" for="coloring">Coloring</label>
+              <input type="checkbox" class="btn-check" value="Shading" id="shading" name="categories" autocomplete="off">
+              <label class="btn" for="shading">Shading</label>
+              <input type="checkbox" class="btn-check" value="Painting" id="painting" name="categories" autocomplete="off">
+              <label class="btn" for="painting">Painting</label>
+              <input type="checkbox" class="btn-check" value="Sketching" id="sketching" name="categories" autocomplete="off">
+              <label class="btn" for="sketching">Sketching</label>
+              <input type="checkbox" class="btn-check" value="Graphic Design" id="graphic-design" name="categories" autocomplete="off">
+              <label class="btn" for="graphic-design">Graphic Design</label>
+              <input type="checkbox" class="btn-check" value="Clay Making" id="clay-making" name="categories" autocomplete="off">
+              <label class="btn" for="clay-making">Clay Making</label>
+              <input type="checkbox" class="btn-check" value="Sculpture" id="sculpture" name="categories" autocomplete="off">
+              <label class="btn" for="sculpture">Sculpture</label>
+              <input type="checkbox" class="btn-check" value="Digital Art" id="digital-art" name="categories" autocomplete="off">
+              <label class="btn" for="digital-art">Digital Art</label>
+              <input type="checkbox" class="btn-check" value="Photography" id="photography" name="categories" autocomplete="off">
+              <label class="btn" for="photography">Photography</label>
+              <input type="checkbox" class="btn-check" value="Calligraphy" id="calligraphy" name="categories" autocomplete="off">
+              <label class="btn" for="calligraphy">Calligraphy</label>
+              <input type="checkbox" class="btn-check" value="Textile Art" id="textile-art" name="categories" autocomplete="off">
+              <label class="btn" for="textile-art">Textile Art</label>
+              <input type="checkbox" class="btn-check" value="Printmaking" id="printmaking" name="categories" autocomplete="off">
+              <label class="btn" for="printmaking">Printmaking</label>
+              <input type="checkbox" class="btn-check" value="Ceramics" id="ceramics" name="categories" autocomplete="off">
+              <label class="btn" for="ceramics">Ceramics</label>
+              <input type="checkbox" class="btn-check" value="Mosaic" id="mosaic" name="categories" autocomplete="off">
+              <label class="btn" for="mosaic">Mosaic</label>
+              <input type="checkbox" class="btn-check" value="Mixed Media" id="mixed-media" name="categories" autocomplete="off">
+              <label class="btn" for="mixed-media">Mixed Media</label>
+              <input type="checkbox" class="btn-check" value="Illustration" id="illustration" name="categories" autocomplete="off">
+              <label class="btn" for="illustration">Illustration</label>
+              <!-- <input type="checkbox" class="btn-check" value="Installation Art" id="installation-art" name="categories" autocomplete="off">
+              <label class="btn" for="installation-art">Installation Art</label> -->
+              <!-- <input type="checkbox" class="btn-check" value="Video Art" id="video-art" name="categories" autocomplete="off">
+              <label class="btn" for="video-art">Video Art</label>
+              <input type="checkbox" class="btn-check" value="Performance Art" id="performance-art" name="categories" autocomplete="off">
+              <label class="btn" for="performance-art">Performance Art</label> -->
+          </div>          
+            
+          </div>
+          <!-- Artist Signature (NEEDS TO BE AUTOFILLED) -->
+          <!-- <div class="mb-3">
+            <label for="artist-signature" class="form-label">Artist Signature</label>
+            <input type="file" class="form-control" id="artist-signature">
+          </div> -->
+          <!-- Social Media Links (NEEDS TO BE AUTOFILLED) -->
+          <!-- <div class="mb-3">
+            <label for="social-media" class="form-label">Social Media Links</label>
+            <input type="url" class="form-control" id="social-media" placeholder="http://">
+          </div> -->
+          <!-- Submission Button -->
+          <div class="text-center align-middle text-success m-1 p-1" id="success-alert" name="success-alert"></div>
+          <div id="progressbardiv" class="progress m-3 d-none" role="progressbar" aria-label="Animated striped example" aria-valuemin="0" aria-valuemax="100">
+            <div id="progressbar" class="progress-bar progress-bar-striped progress-bar-animated w-25"></div>
+          </div>
+          <p id="progressbarstatus" class="m-3"></p>
+          <button id="submit-coa" type="submit" class="btn btn-success w-100">Submit For Review</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="{{url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{url_for('static', filename='js/jquery-3.6.0.min.js')}}"></script>
+  <script src="{{url_for('static', filename='js/admin.js')}}"></script>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate of Authenticity</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-icons.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/view_search.css') }}">
+</head>
+<body>
+  <div class="certificate-container">
+    {% if search_data %}
+      <div class="certificate-header">
+        <h1>Certificate of Authenticity</h1>
+        <h2>{{ search_data[0].artwork_title }}</h2>
+      </div>
+      <div class="certificate-body">
+        <p><strong>Artwork Title:</strong> {{ search_data[0].artwork_title }}</p>
+        <p><strong>Description:</strong> {{ search_data[0].art_description }}</p>
+        <p><strong>Categories:</strong> {{ search_data[0].categories }}</p>
+        <p><strong>Date Completed:</strong> {{ search_data[0].date_completed }}</p>
+        <p><strong>COA ID:</strong> {{ search_data[0].coa_id }}</p>
+        <p><strong>Owner User ID:</strong> {{ search_data[0].user_id }}</p>
+
+        <!-- Image Carousel -->
+        <div class="certificate-section-title">Artwork Images</div>
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            {% for data in search_data %}
+              <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
+                <img src="{{ data.secure_url }}" class="d-block w-100" alt="{{ data.filename }}">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>{{ data.filename }}</h5>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+      <div class="signature">
+        Certified by <br> 
+        <strong>COA Authority</strong>
+      </div>
+    {% else %}
+      <h3>Loading...</h3>
+    {% endif %}
+  </div>
+
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/view-search.js') }}"></script>
+</body>
+</html>
